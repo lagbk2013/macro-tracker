@@ -27,27 +27,27 @@
       --accent: #4a9eff;
       --radius: 14px;
       --radius-sm: 9px;
+      --muscle: #a78bfa;
+      --energy: #f97316;
+      --bone: #34d399;
+      --electro: #38bdf8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; }
     body { padding-bottom: env(safe-area-inset-bottom); }
 
-    /* NAV */
     .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15,15,15,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 0.5px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
     .tab { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 8px; gap: 4px; cursor: pointer; font-size: 10px; color: var(--text3); transition: color 0.15s; border: none; background: none; }
     .tab.active { color: var(--accent); }
     .tab svg { width: 22px; height: 22px; }
 
-    /* PAGES */
     .page { display: none; padding: 0 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 90px; min-height: 100vh; overflow-y: auto; }
     .page.active { display: block; }
 
-    /* HEADER */
     .page-header { margin-bottom: 20px; }
     .page-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
     .page-header p { font-size: 13px; color: var(--text2); margin-top: 3px; }
 
-    /* MACRO CARDS */
     .macro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
     .macro-card { background: var(--bg2); border-radius: var(--radius); padding: 16px; border: 0.5px solid var(--border); }
     .macro-card.wide { grid-column: span 2; display: flex; justify-content: space-between; align-items: center; }
@@ -59,7 +59,21 @@
     .carb-val { color: var(--carb); }
     .fat-val { color: var(--fat); }
 
-    /* SCANNER */
+    .micro-section { margin-bottom: 20px; }
+    .micro-section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .micro-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .micro-section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text2); }
+    .micro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .micro-card { background: var(--bg2); border-radius: var(--radius-sm); padding: 12px 14px; border: 0.5px solid var(--border); }
+    .micro-card .m-name { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+    .micro-card .m-val { font-size: 22px; font-weight: 600; line-height: 1; }
+    .micro-card .m-unit { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .micro-card .m-note { font-size: 10px; color: var(--text3); margin-top: 5px; }
+    .muscle-val { color: var(--muscle); }
+    .energy-val { color: var(--energy); }
+    .bone-val { color: var(--bone); }
+    .electro-val { color: var(--electro); }
+
     .card { background: var(--bg2); border-radius: var(--radius); border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
     .card-body { padding: 16px; }
     .card-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
@@ -88,7 +102,6 @@
     .status.err { color: var(--fat); }
     .status.ok { color: var(--carb); }
 
-    /* PRODUCT PREVIEW */
     .preview { display: none; background: var(--bg3); border-radius: var(--radius-sm); padding: 14px; margin-top: 14px; border: 0.5px solid var(--border2); }
     .preview-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
     .preview-brand { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
@@ -96,11 +109,18 @@
     .nutrient-table td { padding: 5px 0; border-bottom: 0.5px solid var(--border); color: var(--text2); }
     .nutrient-table td:last-child { text-align: right; color: var(--text); }
     .nutrient-table tr:last-child td { border-bottom: none; }
+    .preview-micro-toggle { margin-top: 10px; font-size: 12px; color: var(--accent); cursor: pointer; text-align: center; padding: 6px 0; }
+    .preview-micros { display: none; margin-top: 4px; border-top: 0.5px solid var(--border); padding-top: 10px; }
+    .preview-micros.open { display: block; }
+    .micro-group-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin: 8px 0 4px; }
+    .preview-micro-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+    .preview-micro-row .pml { color: var(--text2); }
+    .preview-micro-row .pmv { color: var(--text); }
+    .preview-micro-row .pmv.none { color: var(--text3); }
     .serving-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
     .serving-row input { width: 80px; text-align: center; }
     .serving-row span { font-size: 13px; color: var(--text2); flex: 1; }
 
-    /* LOG */
     .log-empty { text-align: center; padding: 40px 0; color: var(--text3); font-size: 14px; }
     .log-date-group { margin-bottom: 20px; }
     .log-date-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; padding-left: 2px; }
@@ -113,7 +133,6 @@
     .rm-btn { background: none; border: none; color: var(--text3); font-size: 20px; cursor: pointer; padding: 0 2px; line-height: 1; }
     .rm-btn:active { color: var(--fat); }
 
-    /* SETTINGS */
     .settings-section { margin-bottom: 24px; }
     .settings-section h2 { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; padding-left: 2px; }
     .settings-card { background: var(--bg2); border-radius: var(--radius); border: 0.5px solid var(--border); overflow: hidden; }
@@ -122,6 +141,7 @@
     .settings-row span { color: var(--text2); font-size: 13px; }
     .install-tip { background: rgba(74,158,255,0.1); border: 0.5px solid rgba(74,158,255,0.25); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #7bbcff; }
     .install-tip strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 14px; }
+    .coverage-note { background: rgba(255,255,255,0.03); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12px; color: var(--text3); line-height: 1.6; margin-bottom: 20px; }
     .version-tag { text-align: center; font-size: 12px; color: var(--text3); padding-top: 10px; }
   </style>
 </head>
@@ -152,7 +172,7 @@
       <div class="val carb-val" id="total-carb">0</div>
       <div class="unit">grams</div>
     </div>
-    <div class="macro-card" style="grid-column: span 2;">
+    <div class="macro-card" style="grid-column:span 2;">
       <div class="label">Fat</div>
       <div class="val fat-val" id="total-fat">0</div>
       <div class="unit">grams</div>
@@ -176,18 +196,15 @@
       <div id="stop-btn-wrap" style="display:none;">
         <button class="btn btn-outline" onclick="stopScan()">Stop camera</button>
       </div>
-
       <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px;">
         <div style="flex:1;height:0.5px;background:var(--border);"></div>
         <span style="font-size:12px;color:var(--text3);">or enter manually</span>
         <div style="flex:1;height:0.5px;background:var(--border);"></div>
       </div>
-
       <div class="input-row">
         <input type="text" id="barcode-input" placeholder="Barcode number..." inputmode="numeric" />
         <button class="btn btn-outline btn-sm" onclick="lookupManual()">Look up</button>
       </div>
-
       <div class="status" id="status-msg"></div>
 
       <div class="preview" id="product-preview">
@@ -200,12 +217,89 @@
           <tr><td>Fat</td><td id="pv-fat"></td></tr>
           <tr><td style="color:var(--text3);font-size:11px;">per 100g</td><td></td></tr>
         </table>
+
+        <div class="preview-micro-toggle" id="micro-toggle" onclick="toggleMicroPreview()">Show micronutrients ▾</div>
+        <div class="preview-micros" id="preview-micros">
+          <div class="micro-group-label" style="color:var(--muscle);">Muscle &amp; Recovery</div>
+          <div class="preview-micro-row"><span class="pml">Calcium</span><span class="pmv" id="pm-calcium">—</span></div>
+          <div class="preview-micro-row"><span class="pml">Magnesium</span><span class="pmv" id="pm-magnesium">—</span></div>
+          <div class="preview-micro-row"><span class="pml">Zinc</span><span class="pmv" id="pm-zinc">—</span></div>
+          <div class="micro-group-label" style="color:var(--energy);">Energy &amp; Blood</div>
+          <div class="preview-micro-row"><span class="pml">Iron</span><span class="pmv" id="pm-iron">—</span></div>
+          <div class="preview-micro-row"><span class="pml">Vitamin B12</span><span class="pmv" id="pm-b12">—</span></div>
+          <div class="preview-micro-row"><span class="pml">Folate</span><span class="pmv" id="pm-folate">—</span></div>
+          <div class="micro-group-label" style="color:var(--bone);">Bone &amp; Immune</div>
+          <div class="preview-micro-row"><span class="pml">Vitamin D</span><span class="pmv" id="pm-vitd">—</span></div>
+          <div class="preview-micro-row"><span class="pml">Vitamin K</span><span class="pmv" id="pm-vitk">—</span></div>
+          <div class="micro-group-label" style="color:var(--electro);">Electrolytes</div>
+          <div class="preview-micro-row"><span class="pml">Potassium</span><span class="pmv" id="pm-potassium">—</span></div>
+          <div class="preview-micro-row"><span class="pml">Sodium</span><span class="pmv" id="pm-sodium">—</span></div>
+        </div>
+
         <div class="serving-row">
           <input type="number" id="serving-size" value="100" min="1" />
           <span>grams / serving</span>
           <button class="btn btn-primary btn-sm" onclick="addToLog()">Add</button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: MICROS -->
+<div class="page" id="page-micros">
+  <div class="page-header">
+    <h1>Micros</h1>
+    <p id="micro-date-label"></p>
+  </div>
+
+  <div class="coverage-note">
+    Coverage depends on what manufacturers report. Big brand products usually have full panels — smaller brands may only have macros. A value of 0 means no data was reported, not necessarily zero intake.
+  </div>
+
+  <div class="micro-section">
+    <div class="micro-section-header">
+      <div class="micro-dot" style="background:var(--muscle);"></div>
+      <div class="micro-section-title">Muscle &amp; Recovery</div>
+    </div>
+    <div class="micro-grid">
+      <div class="micro-card"><div class="m-name">Calcium</div><div class="m-val muscle-val" id="m-calcium">0</div><div class="m-unit">mg</div><div class="m-note">RDI ~1000 mg</div></div>
+      <div class="micro-card"><div class="m-name">Magnesium</div><div class="m-val muscle-val" id="m-magnesium">0</div><div class="m-unit">mg</div><div class="m-note">RDI ~400 mg</div></div>
+      <div class="micro-card"><div class="m-name">Zinc</div><div class="m-val muscle-val" id="m-zinc">0</div><div class="m-unit">mg</div><div class="m-note">RDI ~11 mg</div></div>
+    </div>
+  </div>
+
+  <div class="micro-section">
+    <div class="micro-section-header">
+      <div class="micro-dot" style="background:var(--energy);"></div>
+      <div class="micro-section-title">Energy &amp; Blood</div>
+    </div>
+    <div class="micro-grid">
+      <div class="micro-card"><div class="m-name">Iron</div><div class="m-val energy-val" id="m-iron">0</div><div class="m-unit">mg</div><div class="m-note">RDI ~8 mg</div></div>
+      <div class="micro-card"><div class="m-name">Vitamin B12</div><div class="m-val energy-val" id="m-b12">0</div><div class="m-unit">µg</div><div class="m-note">RDI ~2.4 µg</div></div>
+      <div class="micro-card"><div class="m-name">Folate</div><div class="m-val energy-val" id="m-folate">0</div><div class="m-unit">µg</div><div class="m-note">RDI ~400 µg</div></div>
+    </div>
+  </div>
+
+  <div class="micro-section">
+    <div class="micro-section-header">
+      <div class="micro-dot" style="background:var(--bone);"></div>
+      <div class="micro-section-title">Bone &amp; Immune</div>
+    </div>
+    <div class="micro-grid">
+      <div class="micro-card"><div class="m-name">Vitamin D</div><div class="m-val bone-val" id="m-vitd">0</div><div class="m-unit">µg</div><div class="m-note">RDI ~15 µg</div></div>
+      <div class="micro-card"><div class="m-name">Vitamin K</div><div class="m-val bone-val" id="m-vitk">0</div><div class="m-unit">µg</div><div class="m-note">RDI ~120 µg</div></div>
+    </div>
+  </div>
+
+  <div class="micro-section">
+    <div class="micro-section-header">
+      <div class="micro-dot" style="background:var(--electro);"></div>
+      <div class="micro-section-title">Electrolytes</div>
+    </div>
+    <div class="micro-grid">
+      <div class="micro-card"><div class="m-name">Potassium</div><div class="m-val electro-val" id="m-potassium">0</div><div class="m-unit">mg</div><div class="m-note">RDI ~3500 mg</div></div>
+      <div class="micro-card"><div class="m-name">Sodium</div><div class="m-val electro-val" id="m-sodium">0</div><div class="m-unit">mg</div><div class="m-note">Max ~2300 mg</div></div>
     </div>
   </div>
 </div>
@@ -221,27 +315,18 @@
 
 <!-- PAGE: SETTINGS -->
 <div class="page" id="page-settings">
-  <div class="page-header">
-    <h1>Settings</h1>
-  </div>
-
-  <div class="install-tip" id="install-tip">
+  <div class="page-header"><h1>Settings</h1></div>
+  <div class="install-tip">
     <strong>Add to Home Screen</strong>
     Tap the share button in Safari, then "Add to Home Screen" to use this as a full-screen app.
   </div>
-
   <div class="settings-section">
     <h2>Data</h2>
     <div class="settings-card">
-      <div class="settings-row">
-        Today's items <span id="today-count">0 items</span>
-      </div>
-      <div class="settings-row">
-        Total logged <span id="total-count">0 items</span>
-      </div>
+      <div class="settings-row">Today's items <span id="today-count">0 items</span></div>
+      <div class="settings-row">Total logged <span id="total-count">0 items</span></div>
     </div>
   </div>
-
   <div class="settings-section">
     <h2>Actions</h2>
     <div style="display:flex;flex-direction:column;gap:10px;">
@@ -249,16 +334,15 @@
       <button class="btn btn-danger" onclick="clearAll()">Clear all data</button>
     </div>
   </div>
-
   <div class="settings-section">
     <h2>About</h2>
     <div class="settings-card">
       <div class="settings-row">Data source <span>Open Food Facts</span></div>
       <div class="settings-row">Storage <span>On-device only</span></div>
+      <div class="settings-row">Version <span>2.0</span></div>
     </div>
   </div>
-
-  <div class="version-tag">Macro Tracker v1.0</div>
+  <div class="version-tag">Macro Tracker v2.0</div>
 </div>
 
 <!-- TAB BAR -->
@@ -267,51 +351,82 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
     Scan
   </button>
+  <button class="tab" id="tab-micros" onclick="switchTab('micros')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+    Micros
+  </button>
   <button class="tab" id="tab-log" onclick="switchTab('log')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
     Log
   </button>
   <button class="tab" id="tab-settings" onclick="switchTab('settings')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
     Settings
   </button>
 </nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script>
+  // OFF stores all nutrients in grams per 100g
+  // We convert to display units (mg, µg) on render
+  const MICROS = {
+    calcium:   { keys: ['calcium_100g'],                             unit: 'mg',  dec: 0, factor: 1000 },
+    magnesium: { keys: ['magnesium_100g'],                           unit: 'mg',  dec: 0, factor: 1000 },
+    zinc:      { keys: ['zinc_100g'],                                unit: 'mg',  dec: 1, factor: 1000 },
+    iron:      { keys: ['iron_100g'],                                unit: 'mg',  dec: 1, factor: 1000 },
+    b12:       { keys: ['vitamin-b12_100g','vitamin_b12_100g'],      unit: 'µg',  dec: 1, factor: 1000000 },
+    folate:    { keys: ['folate_100g','vitamin-b9_100g','folic-acid_100g'], unit: 'µg', dec: 0, factor: 1000000 },
+    vitd:      { keys: ['vitamin-d_100g','vitamin_d_100g'],          unit: 'µg',  dec: 1, factor: 1000000 },
+    vitk:      { keys: ['vitamin-k_100g','vitamin_k_100g'],          unit: 'µg',  dec: 0, factor: 1000000 },
+    potassium: { keys: ['potassium_100g'],                           unit: 'mg',  dec: 0, factor: 1000 },
+    sodium:    { keys: ['sodium_100g'],                              unit: 'mg',  dec: 0, factor: 1000 },
+  };
+
+  function getRawMicro(n, key) {
+    for (const k of MICROS[key].keys) {
+      const v = parseFloat(n[k]);
+      if (!isNaN(v) && v > 0) return v; // raw grams
+    }
+    return 0;
+  }
+
+  function displayMicro(rawGrams, key) {
+    const m = MICROS[key];
+    return (rawGrams * m.factor).toFixed(m.dec);
+  }
+
   // ── STATE ──────────────────────────────────────────────
   let currentProduct = null;
   let scanning = false;
   let camStream = null;
 
-  function todayKey() {
-    return new Date().toISOString().slice(0, 10);
-  }
-
-  function loadLog() {
-    try { return JSON.parse(localStorage.getItem('macroLog') || '[]'); }
-    catch { return []; }
-  }
-
-  function saveLog(log) {
-    localStorage.setItem('macroLog', JSON.stringify(log));
-  }
-
-  function todayItems() {
-    return loadLog().filter(i => i.date === todayKey());
-  }
+  function todayKey() { return new Date().toISOString().slice(0, 10); }
+  function loadLog() { try { return JSON.parse(localStorage.getItem('macroLog2') || '[]'); } catch { return []; } }
+  function saveLog(log) { localStorage.setItem('macroLog2', JSON.stringify(log)); }
+  function todayItems() { return loadLog().filter(i => i.date === todayKey()); }
 
   // ── TOTALS ─────────────────────────────────────────────
   function updateTotals() {
     const items = todayItems();
-    const t = items.reduce((a, i) => {
-      a.cal += i.cal; a.prot += i.prot; a.carb += i.carb; a.fat += i.fat;
-      return a;
-    }, { cal: 0, prot: 0, carb: 0, fat: 0 });
-    document.getElementById('total-cal').textContent = Math.round(t.cal);
+    const t = { cal:0, prot:0, carb:0, fat:0 };
+    const mt = {};
+    for (const k of Object.keys(MICROS)) mt[k] = 0;
+
+    items.forEach(i => {
+      t.cal += i.cal; t.prot += i.prot; t.carb += i.carb; t.fat += i.fat;
+      if (i.micros) for (const k of Object.keys(MICROS)) mt[k] += (i.micros[k] || 0);
+    });
+
+    document.getElementById('total-cal').textContent  = Math.round(t.cal);
     document.getElementById('total-prot').textContent = t.prot.toFixed(1);
     document.getElementById('total-carb').textContent = t.carb.toFixed(1);
-    document.getElementById('total-fat').textContent = t.fat.toFixed(1);
+    document.getElementById('total-fat').textContent  = t.fat.toFixed(1);
+
+    for (const k of Object.keys(MICROS)) {
+      const el = document.getElementById('m-' + k);
+      if (el) el.textContent = displayMicro(mt[k], k);
+    }
+
     document.getElementById('today-count').textContent = items.length + ' items';
     document.getElementById('total-count').textContent = loadLog().length + ' items';
   }
@@ -329,7 +444,7 @@
     currentProduct = null;
     try {
       const res = await fetch(
-        'https://world.openfoodfacts.org/api/v2/product/' + code + '?fields=product_name,brands,nutriments',
+        `https://world.openfoodfacts.org/api/v2/product/${code}?fields=product_name,brands,nutriments`,
         { signal: AbortSignal.timeout(9000) }
       );
       const data = await res.json();
@@ -338,25 +453,62 @@
       }
       const p = data.product;
       const n = p.nutriments || {};
+
+      const micros = {};
+      for (const k of Object.keys(MICROS)) micros[k] = getRawMicro(n, k);
+
       currentProduct = {
-        name: p.product_name || 'Unknown product',
+        name:  p.product_name || 'Unknown product',
         brand: p.brands || '',
-        cal: parseFloat(n['energy-kcal_100g'] || (n['energy_100g'] || 0) / 4.184),
-        prot: parseFloat(n['proteins_100g'] || 0),
-        carb: parseFloat(n['carbohydrates_100g'] || 0),
-        fat: parseFloat(n['fat_100g'] || 0)
+        cal:   parseFloat(n['energy-kcal_100g'] || (n['energy_100g'] || 0) / 4.184),
+        prot:  parseFloat(n['proteins_100g'] || 0),
+        carb:  parseFloat(n['carbohydrates_100g'] || 0),
+        fat:   parseFloat(n['fat_100g'] || 0),
+        micros
       };
-      document.getElementById('pv-name').textContent = currentProduct.name;
+
+      document.getElementById('pv-name').textContent  = currentProduct.name;
       document.getElementById('pv-brand').textContent = currentProduct.brand;
-      document.getElementById('pv-cal').textContent = currentProduct.cal.toFixed(1) + ' kcal';
-      document.getElementById('pv-prot').textContent = currentProduct.prot.toFixed(1) + ' g';
-      document.getElementById('pv-carb').textContent = currentProduct.carb.toFixed(1) + ' g';
-      document.getElementById('pv-fat').textContent = currentProduct.fat.toFixed(1) + ' g';
+      document.getElementById('pv-cal').textContent   = currentProduct.cal.toFixed(1) + ' kcal';
+      document.getElementById('pv-prot').textContent  = currentProduct.prot.toFixed(1) + ' g';
+      document.getElementById('pv-carb').textContent  = currentProduct.carb.toFixed(1) + ' g';
+      document.getElementById('pv-fat').textContent   = currentProduct.fat.toFixed(1) + ' g';
+
+      // Fill micro preview rows
+      let anyMicro = false;
+      for (const k of Object.keys(MICROS)) {
+        const el = document.getElementById('pm-' + k);
+        if (!el) continue;
+        const raw = micros[k];
+        if (raw > 0) {
+          el.textContent = displayMicro(raw, k) + ' ' + MICROS[k].unit;
+          el.classList.remove('none');
+          anyMicro = true;
+        } else {
+          el.textContent = '—';
+          el.classList.add('none');
+        }
+      }
+
+      const toggle = document.getElementById('micro-toggle');
+      toggle.textContent = anyMicro ? 'Show micronutrients ▾' : 'No micronutrient data for this product';
+      toggle.style.color = anyMicro ? 'var(--accent)' : 'var(--text3)';
+      toggle.style.cursor = anyMicro ? 'pointer' : 'default';
+      toggle.onclick = anyMicro ? toggleMicroPreview : null;
+
       document.getElementById('product-preview').style.display = 'block';
+      document.getElementById('preview-micros').classList.remove('open');
       setStatus('');
     } catch(e) {
       setStatus('Network error. Are you online?', 'err');
     }
+  }
+
+  function toggleMicroPreview() {
+    const el = document.getElementById('preview-micros');
+    const toggle = document.getElementById('micro-toggle');
+    const open = el.classList.toggle('open');
+    toggle.textContent = open ? 'Hide micronutrients ▴' : 'Show micronutrients ▾';
   }
 
   function lookupManual() {
@@ -374,6 +526,9 @@
     if (!currentProduct) return;
     const serving = parseFloat(document.getElementById('serving-size').value) || 100;
     const r = serving / 100;
+    const scaledMicros = {};
+    for (const k of Object.keys(MICROS)) scaledMicros[k] = (currentProduct.micros[k] || 0) * r;
+
     const log = loadLog();
     log.push({
       id: Date.now(),
@@ -381,10 +536,11 @@
       name: currentProduct.name,
       brand: currentProduct.brand,
       serving,
-      cal: Math.round(currentProduct.cal * r * 10) / 10,
+      cal:  Math.round(currentProduct.cal * r * 10) / 10,
       prot: Math.round(currentProduct.prot * r * 10) / 10,
       carb: Math.round(currentProduct.carb * r * 10) / 10,
-      fat: Math.round(currentProduct.fat * r * 10) / 10
+      fat:  Math.round(currentProduct.fat * r * 10) / 10,
+      micros: scaledMicros
     });
     saveLog(log);
     updateTotals();
@@ -413,10 +569,11 @@
     const today = todayKey();
     let html = '';
     for (const [date, items] of Object.entries(byDate)) {
-      const label = date === today ? 'Today' : new Date(date + 'T12:00:00').toLocaleDateString('en-CA', { weekday: 'long', month: 'short', day: 'numeric' });
+      const label = date === today
+        ? 'Today'
+        : new Date(date + 'T12:00:00').toLocaleDateString('en-CA', { weekday: 'long', month: 'short', day: 'numeric' });
       const dayTotal = items.reduce((a, i) => a + i.cal, 0);
-      html += `<div class="log-date-group">
-        <div class="log-date-label">${label} — ${Math.round(dayTotal)} kcal</div>`;
+      html += `<div class="log-date-group"><div class="log-date-label">${label} — ${Math.round(dayTotal)} kcal</div>`;
       items.forEach(item => {
         html += `<div class="log-item">
           <div class="log-item-left">
@@ -432,36 +589,35 @@
       html += '</div>';
     }
     el.innerHTML = html;
-    const todayTotal = todayItems().reduce((a,i) => a + i.cal, 0);
-    document.getElementById('log-subtitle').textContent = `${todayItems().length} items today · ${Math.round(todayTotal)} kcal`;
+    const ti = todayItems();
+    document.getElementById('log-subtitle').textContent =
+      `${ti.length} items today · ${Math.round(ti.reduce((a,i) => a+i.cal,0))} kcal`;
   }
 
   function removeItem(id) {
     saveLog(loadLog().filter(i => i.id !== id));
-    updateTotals();
-    renderLog();
+    updateTotals(); renderLog();
   }
 
   // ── SETTINGS ───────────────────────────────────────────
   function clearToday() {
-    if (!confirm('Clear today\'s log?')) return;
+    if (!confirm("Clear today's log?")) return;
     saveLog(loadLog().filter(i => i.date !== todayKey()));
-    updateTotals();
-    renderLog();
+    updateTotals(); renderLog();
   }
-
   function clearAll() {
     if (!confirm('Clear ALL logged data? This cannot be undone.')) return;
-    localStorage.removeItem('macroLog');
-    updateTotals();
-    renderLog();
+    localStorage.removeItem('macroLog2');
+    updateTotals(); renderLog();
   }
 
   // ── CAMERA ─────────────────────────────────────────────
   async function startScan() {
     if (scanning) return;
     try {
-      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+      camStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false
+      });
       const video = document.getElementById('video');
       video.srcObject = camStream;
       document.getElementById('video-wrap').style.display = 'block';
@@ -469,16 +625,14 @@
       document.getElementById('stop-btn-wrap').style.display = 'block';
       scanning = true;
       setStatus('Point at a barcode…');
-
       Quagga.init({
         inputStream: { type: 'LiveStream', target: video, constraints: { facingMode: 'environment' } },
-        decoder: { readers: ['ean_reader', 'upc_reader', 'upc_e_reader', 'ean_8_reader', 'code_128_reader'] },
+        decoder: { readers: ['ean_reader','upc_reader','upc_e_reader','ean_8_reader','code_128_reader'] },
         locate: true
       }, err => {
         if (err) { setStatus('Camera error: ' + err, 'err'); stopScan(); return; }
         Quagga.start();
       });
-
       let lastCode = null, lastTime = 0;
       Quagga.onDetected(result => {
         const code = result.codeResult.code;
@@ -507,24 +661,21 @@
 
   // ── TABS ───────────────────────────────────────────────
   function switchTab(name) {
-    ['scan', 'log', 'settings'].forEach(t => {
+    ['scan','micros','log','settings'].forEach(t => {
       document.getElementById('page-' + t).classList.toggle('active', t === name);
       document.getElementById('tab-' + t).classList.toggle('active', t === name);
     });
     if (name === 'log') renderLog();
-    if (name === 'settings') updateTotals();
+    if (name === 'micros' || name === 'settings') updateTotals();
   }
 
   // ── INIT ───────────────────────────────────────────────
   const now = new Date();
   const dayLabel = now.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' });
   document.getElementById('scan-date-label').textContent = dayLabel;
+  document.getElementById('micro-date-label').textContent = dayLabel;
   updateTotals();
-
-  // Register service worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
