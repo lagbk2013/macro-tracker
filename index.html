@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Macros" />
+  <meta name="theme-color" content="#0f0f0f" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>Macros</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #242424;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #f0f0f0;
+      --text2: #888;
+      --text3: #555;
+      --cal: #e8a838;
+      --prot: #4a9eff;
+      --carb: #4ecb71;
+      --fat: #e05c8a;
+      --accent: #4a9eff;
+      --radius: 14px;
+      --radius-sm: 9px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; }
+    body { padding-bottom: env(safe-area-inset-bottom); }
+
+    /* NAV */
+    .tab-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15,15,15,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 0.5px solid var(--border); display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 100; }
+    .tab { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0 8px; gap: 4px; cursor: pointer; font-size: 10px; color: var(--text3); transition: color 0.15s; border: none; background: none; }
+    .tab.active { color: var(--accent); }
+    .tab svg { width: 22px; height: 22px; }
+
+    /* PAGES */
+    .page { display: none; padding: 0 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 90px; min-height: 100vh; overflow-y: auto; }
+    .page.active { display: block; }
+
+    /* HEADER */
+    .page-header { margin-bottom: 20px; }
+    .page-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+    .page-header p { font-size: 13px; color: var(--text2); margin-top: 3px; }
+
+    /* MACRO CARDS */
+    .macro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    .macro-card { background: var(--bg2); border-radius: var(--radius); padding: 16px; border: 0.5px solid var(--border); }
+    .macro-card.wide { grid-column: span 2; display: flex; justify-content: space-between; align-items: center; }
+    .macro-card .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .macro-card .val { font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+    .macro-card .unit { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .cal-val { color: var(--cal); }
+    .prot-val { color: var(--prot); }
+    .carb-val { color: var(--carb); }
+    .fat-val { color: var(--fat); }
+
+    /* SCANNER */
+    .card { background: var(--bg2); border-radius: var(--radius); border: 0.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+    .card-body { padding: 16px; }
+    .card-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+
+    #video-wrap { position: relative; width: 100%; background: #000; display: none; }
+    #video-wrap video { width: 100%; display: block; max-height: 240px; object-fit: cover; }
+    .scan-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .scan-frame { width: 65%; aspect-ratio: 2.5/1; border: 2px solid var(--cal); border-radius: 8px; box-shadow: 0 0 0 9999px rgba(0,0,0,0.45); }
+    .scan-line { position: absolute; left: 17.5%; right: 17.5%; height: 2px; background: var(--cal); animation: sweep 1.8s ease-in-out infinite; }
+    @keyframes sweep { 0%,100% { top: 32%; } 50% { top: 68%; } }
+
+    .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
+    .btn:active { transform: scale(0.97); opacity: 0.85; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-outline { background: var(--bg3); color: var(--text); border: 0.5px solid var(--border2); }
+    .btn-danger { background: rgba(224,92,138,0.15); color: var(--fat); border: 0.5px solid rgba(224,92,138,0.3); }
+    .btn-sm { padding: 10px 16px; font-size: 14px; width: auto; }
+
+    .input-row { display: flex; gap: 10px; align-items: stretch; }
+    .input-row input { flex: 1; }
+    input[type=text], input[type=number] { background: var(--bg3); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-size: 15px; padding: 13px 14px; width: 100%; font-family: inherit; }
+    input[type=text]:focus, input[type=number]:focus { outline: none; border-color: var(--accent); }
+    input::placeholder { color: var(--text3); }
+
+    .status { font-size: 13px; color: var(--text2); min-height: 20px; margin-top: 12px; text-align: center; }
+    .status.err { color: var(--fat); }
+    .status.ok { color: var(--carb); }
+
+    /* PRODUCT PREVIEW */
+    .preview { display: none; background: var(--bg3); border-radius: var(--radius-sm); padding: 14px; margin-top: 14px; border: 0.5px solid var(--border2); }
+    .preview-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .preview-brand { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+    .nutrient-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+    .nutrient-table td { padding: 5px 0; border-bottom: 0.5px solid var(--border); color: var(--text2); }
+    .nutrient-table td:last-child { text-align: right; color: var(--text); }
+    .nutrient-table tr:last-child td { border-bottom: none; }
+    .serving-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+    .serving-row input { width: 80px; text-align: center; }
+    .serving-row span { font-size: 13px; color: var(--text2); flex: 1; }
+
+    /* LOG */
+    .log-empty { text-align: center; padding: 40px 0; color: var(--text3); font-size: 14px; }
+    .log-date-group { margin-bottom: 20px; }
+    .log-date-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; padding-left: 2px; }
+    .log-item { background: var(--bg2); border-radius: var(--radius-sm); border: 0.5px solid var(--border); padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .log-item-left { flex: 1; min-width: 0; }
+    .log-item-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-item-macros { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    .log-item-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .log-item-cal { font-size: 14px; font-weight: 600; color: var(--cal); }
+    .rm-btn { background: none; border: none; color: var(--text3); font-size: 20px; cursor: pointer; padding: 0 2px; line-height: 1; }
+    .rm-btn:active { color: var(--fat); }
+
+    /* SETTINGS */
+    .settings-section { margin-bottom: 24px; }
+    .settings-section h2 { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; padding-left: 2px; }
+    .settings-card { background: var(--bg2); border-radius: var(--radius); border: 0.5px solid var(--border); overflow: hidden; }
+    .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 0.5px solid var(--border); font-size: 15px; }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row span { color: var(--text2); font-size: 13px; }
+    .install-tip { background: rgba(74,158,255,0.1); border: 0.5px solid rgba(74,158,255,0.25); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #7bbcff; }
+    .install-tip strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 14px; }
+    .version-tag { text-align: center; font-size: 12px; color: var(--text3); padding-top: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- PAGE: SCAN -->
+<div class="page active" id="page-scan">
+  <div class="page-header">
+    <h1>Macros</h1>
+    <p id="scan-date-label"></p>
+  </div>
+
+  <div class="macro-grid">
+    <div class="macro-card wide">
+      <div>
+        <div class="label">Calories today</div>
+        <div class="val cal-val" id="total-cal">0</div>
+      </div>
+      <div class="unit" style="font-size:15px;">kcal</div>
+    </div>
+    <div class="macro-card">
+      <div class="label">Protein</div>
+      <div class="val prot-val" id="total-prot">0</div>
+      <div class="unit">grams</div>
+    </div>
+    <div class="macro-card">
+      <div class="label">Carbs</div>
+      <div class="val carb-val" id="total-carb">0</div>
+      <div class="unit">grams</div>
+    </div>
+    <div class="macro-card" style="grid-column: span 2;">
+      <div class="label">Fat</div>
+      <div class="val fat-val" id="total-fat">0</div>
+      <div class="unit">grams</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="video-wrap">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="scan-overlay"><div class="scan-frame"></div></div>
+      <div class="scan-line"></div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Barcode scanner</div>
+      <div id="scan-btn-wrap">
+        <button class="btn btn-primary" onclick="startScan()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+          Scan barcode
+        </button>
+      </div>
+      <div id="stop-btn-wrap" style="display:none;">
+        <button class="btn btn-outline" onclick="stopScan()">Stop camera</button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px;">
+        <div style="flex:1;height:0.5px;background:var(--border);"></div>
+        <span style="font-size:12px;color:var(--text3);">or enter manually</span>
+        <div style="flex:1;height:0.5px;background:var(--border);"></div>
+      </div>
+
+      <div class="input-row">
+        <input type="text" id="barcode-input" placeholder="Barcode number..." inputmode="numeric" />
+        <button class="btn btn-outline btn-sm" onclick="lookupManual()">Look up</button>
+      </div>
+
+      <div class="status" id="status-msg"></div>
+
+      <div class="preview" id="product-preview">
+        <div class="preview-name" id="pv-name"></div>
+        <div class="preview-brand" id="pv-brand"></div>
+        <table class="nutrient-table">
+          <tr><td>Calories</td><td id="pv-cal"></td></tr>
+          <tr><td>Protein</td><td id="pv-prot"></td></tr>
+          <tr><td>Carbohydrates</td><td id="pv-carb"></td></tr>
+          <tr><td>Fat</td><td id="pv-fat"></td></tr>
+          <tr><td style="color:var(--text3);font-size:11px;">per 100g</td><td></td></tr>
+        </table>
+        <div class="serving-row">
+          <input type="number" id="serving-size" value="100" min="1" />
+          <span>grams / serving</span>
+          <button class="btn btn-primary btn-sm" onclick="addToLog()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: LOG -->
+<div class="page" id="page-log">
+  <div class="page-header">
+    <h1>Food log</h1>
+    <p id="log-subtitle"></p>
+  </div>
+  <div id="log-list"></div>
+</div>
+
+<!-- PAGE: SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="page-header">
+    <h1>Settings</h1>
+  </div>
+
+  <div class="install-tip" id="install-tip">
+    <strong>Add to Home Screen</strong>
+    Tap the share button in Safari, then "Add to Home Screen" to use this as a full-screen app.
+  </div>
+
+  <div class="settings-section">
+    <h2>Data</h2>
+    <div class="settings-card">
+      <div class="settings-row">
+        Today's items <span id="today-count">0 items</span>
+      </div>
+      <div class="settings-row">
+        Total logged <span id="total-count">0 items</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h2>Actions</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button class="btn btn-danger" onclick="clearToday()">Clear today's log</button>
+      <button class="btn btn-danger" onclick="clearAll()">Clear all data</button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h2>About</h2>
+    <div class="settings-card">
+      <div class="settings-row">Data source <span>Open Food Facts</span></div>
+      <div class="settings-row">Storage <span>On-device only</span></div>
+    </div>
+  </div>
+
+  <div class="version-tag">Macro Tracker v1.0</div>
+</div>
+
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <button class="tab active" id="tab-scan" onclick="switchTab('scan')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+    Scan
+  </button>
+  <button class="tab" id="tab-log" onclick="switchTab('log')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+    Log
+  </button>
+  <button class="tab" id="tab-settings" onclick="switchTab('settings')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Settings
+  </button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script>
+  // ── STATE ──────────────────────────────────────────────
+  let currentProduct = null;
+  let scanning = false;
+  let camStream = null;
+
+  function todayKey() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function loadLog() {
+    try { return JSON.parse(localStorage.getItem('macroLog') || '[]'); }
+    catch { return []; }
+  }
+
+  function saveLog(log) {
+    localStorage.setItem('macroLog', JSON.stringify(log));
+  }
+
+  function todayItems() {
+    return loadLog().filter(i => i.date === todayKey());
+  }
+
+  // ── TOTALS ─────────────────────────────────────────────
+  function updateTotals() {
+    const items = todayItems();
+    const t = items.reduce((a, i) => {
+      a.cal += i.cal; a.prot += i.prot; a.carb += i.carb; a.fat += i.fat;
+      return a;
+    }, { cal: 0, prot: 0, carb: 0, fat: 0 });
+    document.getElementById('total-cal').textContent = Math.round(t.cal);
+    document.getElementById('total-prot').textContent = t.prot.toFixed(1);
+    document.getElementById('total-carb').textContent = t.carb.toFixed(1);
+    document.getElementById('total-fat').textContent = t.fat.toFixed(1);
+    document.getElementById('today-count').textContent = items.length + ' items';
+    document.getElementById('total-count').textContent = loadLog().length + ' items';
+  }
+
+  // ── LOOKUP ─────────────────────────────────────────────
+  function setStatus(msg, type) {
+    const el = document.getElementById('status-msg');
+    el.textContent = msg;
+    el.className = 'status' + (type ? ' ' + type : '');
+  }
+
+  async function lookupBarcode(code) {
+    setStatus('Looking up ' + code + '…');
+    document.getElementById('product-preview').style.display = 'none';
+    currentProduct = null;
+    try {
+      const res = await fetch(
+        'https://world.openfoodfacts.org/api/v2/product/' + code + '?fields=product_name,brands,nutriments',
+        { signal: AbortSignal.timeout(9000) }
+      );
+      const data = await res.json();
+      if (data.status !== 1 || !data.product) {
+        setStatus('Product not found. Try another barcode.', 'err'); return;
+      }
+      const p = data.product;
+      const n = p.nutriments || {};
+      currentProduct = {
+        name: p.product_name || 'Unknown product',
+        brand: p.brands || '',
+        cal: parseFloat(n['energy-kcal_100g'] || (n['energy_100g'] || 0) / 4.184),
+        prot: parseFloat(n['proteins_100g'] || 0),
+        carb: parseFloat(n['carbohydrates_100g'] || 0),
+        fat: parseFloat(n['fat_100g'] || 0)
+      };
+      document.getElementById('pv-name').textContent = currentProduct.name;
+      document.getElementById('pv-brand').textContent = currentProduct.brand;
+      document.getElementById('pv-cal').textContent = currentProduct.cal.toFixed(1) + ' kcal';
+      document.getElementById('pv-prot').textContent = currentProduct.prot.toFixed(1) + ' g';
+      document.getElementById('pv-carb').textContent = currentProduct.carb.toFixed(1) + ' g';
+      document.getElementById('pv-fat').textContent = currentProduct.fat.toFixed(1) + ' g';
+      document.getElementById('product-preview').style.display = 'block';
+      setStatus('');
+    } catch(e) {
+      setStatus('Network error. Are you online?', 'err');
+    }
+  }
+
+  function lookupManual() {
+    const code = document.getElementById('barcode-input').value.trim();
+    if (!code) { setStatus('Enter a barcode number.', 'err'); return; }
+    lookupBarcode(code);
+  }
+
+  document.getElementById('barcode-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') lookupManual();
+  });
+
+  // ── ADD TO LOG ─────────────────────────────────────────
+  function addToLog() {
+    if (!currentProduct) return;
+    const serving = parseFloat(document.getElementById('serving-size').value) || 100;
+    const r = serving / 100;
+    const log = loadLog();
+    log.push({
+      id: Date.now(),
+      date: todayKey(),
+      name: currentProduct.name,
+      brand: currentProduct.brand,
+      serving,
+      cal: Math.round(currentProduct.cal * r * 10) / 10,
+      prot: Math.round(currentProduct.prot * r * 10) / 10,
+      carb: Math.round(currentProduct.carb * r * 10) / 10,
+      fat: Math.round(currentProduct.fat * r * 10) / 10
+    });
+    saveLog(log);
+    updateTotals();
+    renderLog();
+    document.getElementById('product-preview').style.display = 'none';
+    document.getElementById('barcode-input').value = '';
+    currentProduct = null;
+    setStatus('Added to log!', 'ok');
+    setTimeout(() => setStatus(''), 2500);
+  }
+
+  // ── RENDER LOG ─────────────────────────────────────────
+  function renderLog() {
+    const log = loadLog();
+    const el = document.getElementById('log-list');
+    if (log.length === 0) {
+      el.innerHTML = '<div class="log-empty">No items logged yet.<br>Scan a barcode to start.</div>';
+      document.getElementById('log-subtitle').textContent = '';
+      return;
+    }
+    const byDate = {};
+    [...log].reverse().forEach(item => {
+      if (!byDate[item.date]) byDate[item.date] = [];
+      byDate[item.date].push(item);
+    });
+    const today = todayKey();
+    let html = '';
+    for (const [date, items] of Object.entries(byDate)) {
+      const label = date === today ? 'Today' : new Date(date + 'T12:00:00').toLocaleDateString('en-CA', { weekday: 'long', month: 'short', day: 'numeric' });
+      const dayTotal = items.reduce((a, i) => a + i.cal, 0);
+      html += `<div class="log-date-group">
+        <div class="log-date-label">${label} — ${Math.round(dayTotal)} kcal</div>`;
+      items.forEach(item => {
+        html += `<div class="log-item">
+          <div class="log-item-left">
+            <div class="log-item-name">${item.name}</div>
+            <div class="log-item-macros">${item.serving}g &nbsp;·&nbsp; P ${item.prot}g &nbsp;·&nbsp; C ${item.carb}g &nbsp;·&nbsp; F ${item.fat}g</div>
+          </div>
+          <div class="log-item-right">
+            <div class="log-item-cal">${Math.round(item.cal)} kcal</div>
+            <button class="rm-btn" onclick="removeItem(${item.id})">×</button>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+    el.innerHTML = html;
+    const todayTotal = todayItems().reduce((a,i) => a + i.cal, 0);
+    document.getElementById('log-subtitle').textContent = `${todayItems().length} items today · ${Math.round(todayTotal)} kcal`;
+  }
+
+  function removeItem(id) {
+    saveLog(loadLog().filter(i => i.id !== id));
+    updateTotals();
+    renderLog();
+  }
+
+  // ── SETTINGS ───────────────────────────────────────────
+  function clearToday() {
+    if (!confirm('Clear today\'s log?')) return;
+    saveLog(loadLog().filter(i => i.date !== todayKey()));
+    updateTotals();
+    renderLog();
+  }
+
+  function clearAll() {
+    if (!confirm('Clear ALL logged data? This cannot be undone.')) return;
+    localStorage.removeItem('macroLog');
+    updateTotals();
+    renderLog();
+  }
+
+  // ── CAMERA ─────────────────────────────────────────────
+  async function startScan() {
+    if (scanning) return;
+    try {
+      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+      const video = document.getElementById('video');
+      video.srcObject = camStream;
+      document.getElementById('video-wrap').style.display = 'block';
+      document.getElementById('scan-btn-wrap').style.display = 'none';
+      document.getElementById('stop-btn-wrap').style.display = 'block';
+      scanning = true;
+      setStatus('Point at a barcode…');
+
+      Quagga.init({
+        inputStream: { type: 'LiveStream', target: video, constraints: { facingMode: 'environment' } },
+        decoder: { readers: ['ean_reader', 'upc_reader', 'upc_e_reader', 'ean_8_reader', 'code_128_reader'] },
+        locate: true
+      }, err => {
+        if (err) { setStatus('Camera error: ' + err, 'err'); stopScan(); return; }
+        Quagga.start();
+      });
+
+      let lastCode = null, lastTime = 0;
+      Quagga.onDetected(result => {
+        const code = result.codeResult.code;
+        const now = Date.now();
+        if (code !== lastCode || now - lastTime > 5000) {
+          lastCode = code; lastTime = now;
+          document.getElementById('barcode-input').value = code;
+          lookupBarcode(code);
+          stopScan();
+        }
+      });
+    } catch(e) {
+      setStatus('Camera access denied. Use manual entry.', 'err');
+    }
+  }
+
+  function stopScan() {
+    if (!scanning) return;
+    try { Quagga.stop(); } catch(e) {}
+    if (camStream) camStream.getTracks().forEach(t => t.stop());
+    camStream = null; scanning = false;
+    document.getElementById('video-wrap').style.display = 'none';
+    document.getElementById('scan-btn-wrap').style.display = 'block';
+    document.getElementById('stop-btn-wrap').style.display = 'none';
+  }
+
+  // ── TABS ───────────────────────────────────────────────
+  function switchTab(name) {
+    ['scan', 'log', 'settings'].forEach(t => {
+      document.getElementById('page-' + t).classList.toggle('active', t === name);
+      document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    });
+    if (name === 'log') renderLog();
+    if (name === 'settings') updateTotals();
+  }
+
+  // ── INIT ───────────────────────────────────────────────
+  const now = new Date();
+  const dayLabel = now.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' });
+  document.getElementById('scan-date-label').textContent = dayLabel;
+  updateTotals();
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
